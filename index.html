@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advice Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, hsl(218, 23%, 16%),hsl(217, 19%, 24%) );
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .advice-number {
+            color: #4ade80;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .advice-text {
+            font-size: 28px;
+            line-height: 1.4;
+            margin-bottom: 40px;
+            font-weight: 300;
+            color: #f8fafc;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 0 20px;
+        }
+
+        .divider-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .divider-icon::before,
+        .divider-icon::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .divider-icon::before {
+            left: 3px;
+        }
+
+        .divider-icon::after {
+            right: 3px;
+        }
+
+        .dice-button {
+            width: 60px;
+            height: 60px;
+            background: #4ade80;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.3);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+        }
+
+        .dice-button:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.4);
+        }
+
+        .dice-button:active {
+            transform: translateY(0);
+        }
+
+        .dice-icon {
+            width: 24px;
+            height: 24px;
+            
+            border-radius: 4px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .dice-button:hover .dice-icon {
+            transform: rotate(180deg);
+        }
+
+        .dice-icon::before {
+            
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Loading state */
+        .loading .dice-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .advice-text {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="advice-number" id="advice-number">ADVICE #117</div>
+        <div class="advice-text" id="advice-text">
+            ""
+        </div>
+        <div class="divider">
+            <img src="images/pattern-divider-desktop.svg">
+        </div>
+        <button class="dice-button" id="dice-button">
+            <img src="images/icon-dice.svg" class="dice-icon">
+        </button>
+    </div>
+</body>
+<script>
+  const adviceNumber = document.getElementById("advice-number");
+  const adviceText = document.getElementById("advice-text");
+  const dice = document.getElementById("dice-button");
+  
+  dice.addEventListener("click", loadAdvice);
+ 
+  function loadAdvice(){
+    fetch("https://api.adviceslip.com/advice")
+  .then((res) => res.json())
+  .then((result) => {
+    
+
+    adviceNumber.innerText = `ADVICE #${result.slip.id}`;
+    adviceText.innerHTML = `"${result.slip.advice}"`;
+
+  });
+  }
+
+  loadAdvice();
+
+  
+//{id: 159, advice: "What's stopping you?"}
+  
+</script>
+</html>
